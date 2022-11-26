@@ -3,6 +3,7 @@ import cors from 'cors'
 import { port } from '../config.js';
 import { indexRoute } from '../routes/user.routes.js';
 import dbConnection from '../database/config.db.js';
+import { indexRouteAuth } from '../routes/auth.routes.js';
 
 class Server {
 
@@ -14,6 +15,7 @@ class Server {
         this.conectardb()
 
         this.usuariosRoutersUsuarios = "/api/usuarios";
+        this.authRoutersUsuarios = "/api/auth";
         //Middelwares
         this.middlewares();
         //Rutas de aplicacion
@@ -23,6 +25,8 @@ class Server {
     routes() {
 
         this.app.use(this.usuariosRoutersUsuarios, indexRoute)
+
+        this.app.use(this.authRoutersUsuarios, indexRouteAuth)
 
 
     }

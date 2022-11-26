@@ -29,7 +29,7 @@ export const usuarioPost = async (req, res = response) => {
     const { nombre, correo, password, rol } = req.body;
 
 
-    const usuario = new SchemaUsuario({ nombre, correo, password, rol })
+    const usuario = new Usuario({ nombre, correo, password, rol })
 
 
     //Encripatar la contraseña

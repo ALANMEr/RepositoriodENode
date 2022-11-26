@@ -36,8 +36,10 @@ const SchemaUsuario = Schema({
 
 })
 ///Aqui hacemos que no aparezca en pantalla el password y el__v
-SchemaUsuario.methods.toJSON=function(){
-    const {__v,password,...usuario} =this.toObject();
+SchemaUsuario.methods.toJSON = function () {
+    const { __v, password, _id, ...usuario } = this.toObject();
+    ///cambiar id por uid
+    usuario.uid = _id;
     return usuario
 }
 
