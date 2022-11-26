@@ -2,12 +2,16 @@ import express from 'express';
 import cors from 'cors'
 import { port } from '../config.js';
 import { indexRoute } from '../routes/user.routes.js';
+import dbConnection from '../database/config.db.js';
 
 class Server {
 
     constructor() {
 
         this.app = express();
+
+        //Conectar base de datos
+        this.conectardb()
 
         this.usuariosRoutersUsuarios = "/api/usuarios";
         //Middelwares
@@ -22,6 +26,9 @@ class Server {
 
 
     }
+    async conectardb() {
+        await dbConnection();
+    }
     middlewares() {
 
 
@@ -30,7 +37,7 @@ class Server {
 
         ///Lectura y parseo del body
         this.app.use(express.json())
-        
+
         //Directorio Publico
         this.app.use(express.static("public"))
     }

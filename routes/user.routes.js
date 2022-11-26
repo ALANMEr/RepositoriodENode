@@ -1,16 +1,38 @@
-import {Router} from 'express';
-import  {usuarioDelete, usuarioGet, usuarioPost, usuarioPut}  from '../controllers/user.controllers.js';
+import { Router } from 'express';
+import { check} from 'express-validator';
+import { usuarioDelete, usuarioGet, usuarioPost, usuarioPut } from '../controllers/user.controllers.js';
+import { emailexiste, esRolValido, existeUsuarioPorId } from '../helpers/db-validators.js';
+import { validarCampos } from '../middlewares/validar-campos.js';
 
 
-const router=Router();
 
-router.get('/',usuarioGet)
+const router = Router();
 
-router.put('/:id', usuarioPut)
+router.get('/', usuarioGet)
 
-router.post('/',usuarioPost)
+router.put('/:id',[
+    check("id", "No es un id valido").isMongoId(),
+    check("id").custom( existeUsuarioPorId),
+    check("rol").custom(esRolValido),
+    validarCampos
+],usuarioPut)
+check("id","No es un id valido").isMongoId()
+router.post('/', [
+    check("nombre", "El nombre es obligatorio").not().isEmpty(),
+    check("correo", "El correo no es válido").isEmail(),
+    check("correo").custom(emailexiste),
+    check("password", "El password debe de tener más de 6 letras").isLength({ min: 6 }),
+    // check("rol", "No es un rol válido").isIn(["ADMIN_ROLE", "USER_ROLE","USER_ROLE"]),
+    check("rol").custom(esRolValido),
+    validarCampos
 
-router.delete('/',usuarioDelete)
+], usuarioPost)
+
+router.delete('/:id', [
+    check("id", "No es un id valido").isMongoId(),
+    check("id").custom(existeUsuarioPorId),
+    validarCampos
+],usuarioDelete)
 
 
 export { router as indexRoute }
